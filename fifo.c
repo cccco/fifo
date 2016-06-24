@@ -8,20 +8,48 @@
 
 int main(int argc, char **argv)
 {
-//    char buffer[BUFFER_SIZE];
-//    bzero((void*)buffer, sizeof(char) * BUFFER_SIZE);
+	char buffer[BUFFER_SIZE];
 
-    mkfifo("/home/kisselev/Kurs/5/543/fifo/in.fifo", 0666);
-    int in = open("/home/kisselev/Kurs/5/543/fifo/in.fifo", O_RDONLY | O_NONBLOCK, 066);
+	unlink("/home/box/in.fifo");
 
+	int in;
 
-    mkfifo("/home/kisselev/Kurs/5/543/fifo/our.fifo", 0666);
-    int out = open("/home/kisselev/Kurs/5/543/fifo/out.fifo", O_WRONLY | O_NONBLOCK, 066);
+	if (mkfifo("/home/box/in.fifo", 0666) == -1) {
+		printf("Error mkfifo in");
+	}
+	if ((in = open("/home/box/in.fifo", O_RDONLY | O_NONBLOCK, 066)) == -1) {
+		printf("Error open fifo in");
+	}
 
-    close(out);
-    dup2(in, out);
+	unlink("/home/box/out.fifo");
+
+	int out;
+
+	if (mkfifo("/home/box/out.fifo", 0666) == -1) {
+		printf("Error mkfifo out");
+	}
+
+	if ((out = open("/home/box/out.fifo", O_WRONLY | O_NONBLOCK, 066)) == -1) {
+		printf("Error open fifo out");
+	}
+
+    //close(out);
+    //dup2(in, out);
+    //close(in);
+
+    int res = read(in, (void*)buffer, (size_t)BUFFER_SIZE);
+
+    if (res <= 0) {
+        printf("Error read");
+        close(in);
+        close(out);
+        return 1;
+    }
+
+    res = write(out, buffer, res);
+
     close(in);
-
+    close(out);
 
     return 0;
 }
