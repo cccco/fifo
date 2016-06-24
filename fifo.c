@@ -10,26 +10,26 @@ int main(int argc, char **argv)
 {
 	char buffer[BUFFER_SIZE];
 
-	unlink("/home/box/in.fifo");
+    unlink("/home/box/in.fifo");
 
 	int in;
 
-	if (mkfifo("/home/box/in.fifo", 0666) == -1) {
+    if (mkfifo("/home/box/in.fifo", 0666) == -1) {
 		printf("Error mkfifo in");
 	}
-	if ((in = open("/home/box/in.fifo", O_RDONLY | O_NONBLOCK, 066)) == -1) {
+    if ((in = open("/home/box/in.fifo", O_RDONLY | O_NONBLOCK, 066)) == -1) {
 		printf("Error open fifo in");
 	}
 
-	unlink("/home/box/out.fifo");
+    unlink("/home/box/out.fifo");
 
 	int out;
 
-	if (mkfifo("/home/box/out.fifo", 0666) == -1) {
+    if (mkfifo("/home/box/out.fifo", 0666) == -1) {
 		printf("Error mkfifo out");
 	}
 
-	if ((out = open("/home/box/out.fifo", O_WRONLY | O_NONBLOCK, 066)) == -1) {
+    if ((out = open("/home/box/out.fifo", O_WRONLY, 066)) == -1) {
 		printf("Error open fifo out");
 	}
 
